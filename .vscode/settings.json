@@ -1,0 +1,12 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Conectores\\jcalendar-1.4.jar",
+        "c:\\Conectores\\mysql-connector-java-8.0.20.jar",
+        "c:\\Conectores\\UCanAccess-5.0.0-bin\\ucanaccess-5.0.0.jar",
+        "c:\\Conectores\\UCanAccess-5.0.0-bin\\lib\\commons-lang3-3.8.1.jar",
+        "c:\\Conectores\\UCanAccess-5.0.0-bin\\lib\\commons-logging-1.2.jar",
+        "c:\\Conectores\\UCanAccess-5.0.0-bin\\lib\\hsqldb-2.5.0.jar",
+        "c:\\Conectores\\UCanAccess-5.0.0-bin\\lib\\jackcess-3.0.1.jar"
+    ]
+}
