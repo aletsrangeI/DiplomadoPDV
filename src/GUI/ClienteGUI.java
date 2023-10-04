@@ -1,262 +1,262 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
-package GUI;
+// /*
+//  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+//  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+//  */
+// package GUI;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
+// import javax.swing.JFrame;
+// import javax.swing.JOptionPane;
+// import javax.swing.SwingUtilities;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Date;
-import Clases.Cliente;
-import Clases.Validador;
-import Database.ClienteDB;
+// import java.awt.event.ActionEvent;
+// import java.awt.event.ActionListener;
+// import java.util.Date;
+// import Clases.Cliente;
+// import Clases.Validador;
+// import Database.ClienteDBAccess;
 
-/**
- *
- * @author Brandon Emmanuel Reséndiz Granados, Ruben Lora Cruz, Alejandro Avila Rangel
- * 
- */
-public class ClienteGUI extends javax.swing.JPanel {
+// /**
+//  *
+//  * @author Brandon Emmanuel Reséndiz Granados, Ruben Lora Cruz, Alejandro Avila Rangel
+//  * 
+//  */
+// public class ClienteGUI extends javax.swing.JPanel {
 
-    /**
-     * Creates new form Cliente
-     */
+//     /**
+//      * Creates new form Cliente
+//      */
 
-    private ClienteDB _clienteDB = new ClienteDB();
-    private Validador _validador = new Validador();
+//     private ClienteDBAccess _clienteDB = new ClienteDBAccess();
+//     private Validador _validador = new Validador();
 
-    public ClienteGUI() {
-        _clienteDB = new ClienteDB();
-        _validador = new Validador();
-        initComponents();
+//     public ClienteGUI() {
+//         _clienteDB = new ClienteDBAccess();
+//         _validador = new Validador();
+//         initComponents();
 
-        btnGuardarCliente.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!validarCampos()) {
-                    return;
-                }
-                String nombres = txtNombres.getText();
-                String apellidos = txtApellidos.getText();
-                String correo = txtCorreos.getText();
-                Date fechaNacimiento = dateChooser.getDate();
+//         btnGuardarCliente.addActionListener(new ActionListener() {
+//             @Override
+//             public void actionPerformed(ActionEvent e) {
+//                 if (!validarCampos()) {
+//                     return;
+//                 }
+//                 String nombres = txtNombres.getText();
+//                 String apellidos = txtApellidos.getText();
+//                 String correo = txtCorreos.getText();
+//                 Date fechaNacimiento = dateChooser.getDate();
 
-                Cliente cliente = new Cliente();
-                cliente.setNombre(nombres);
-                cliente.setApellido(apellidos);
-                cliente.setCorreo(correo);
-                cliente.setFechaNacimiento(fechaNacimiento);
-                if (_clienteDB.insertarCliente(cliente)) {
-                    JOptionPane.showMessageDialog(null, "Cliente insertado correctamente.");
-                    limpiarCampos();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Error al insertar el cliente.");
-                }
-            }
-        });
-    }
+//                 Cliente cliente = new Cliente();
+//                 cliente.setNombre(nombres);
+//                 cliente.setApellido(apellidos);
+//                 cliente.setCorreo(correo);
+//                 cliente.setFechaNacimiento(fechaNacimiento);
+//                 if (_clienteDB.insertarCliente(cliente)) {
+//                     JOptionPane.showMessageDialog(null, "Cliente insertado correctamente.");
+//                     limpiarCampos();
+//                 } else {
+//                     JOptionPane.showMessageDialog(null, "Error al insertar el cliente.");
+//                 }
+//             }
+//         });
+//     }
 
     
 
-    public void limpiarCampos() {
-        txtNombres.setText("");
-        txtApellidos.setText("");
-        txtCorreos.setText("");
-        dateChooser.setDate(null);
-    }
+//     public void limpiarCampos() {
+//         txtNombres.setText("");
+//         txtApellidos.setText("");
+//         txtCorreos.setText("");
+//         dateChooser.setDate(null);
+//     }
 
-    private boolean validarCampos() {
-        boolean camposValidos = true;
+//     private boolean validarCampos() {
+//         boolean camposValidos = true;
 
-        // Validar el campo txtNombres
-        if (!_validador.validarCampoVacio(txtNombres, "Nombres")) {
-            camposValidos = false;
-        }
+//         // Validar el campo txtNombres
+//         if (!_validador.validarCampoVacio(txtNombres, "Nombres")) {
+//             camposValidos = false;
+//         }
 
-        // Validar el campo txtApellidos
-        if (!_validador.validarCampoVacio(txtApellidos, "Apellidos")) {
-            camposValidos = false;
-        }
+//         // Validar el campo txtApellidos
+//         if (!_validador.validarCampoVacio(txtApellidos, "Apellidos")) {
+//             camposValidos = false;
+//         }
 
-        // Validar el campo txtCorreos
-        if (!_validador.validarCampoVacio(txtCorreos, "Correo")) {
-            camposValidos = false;
-        } else {
-            if (!_validador.validarCorreo(txtCorreos.getText())) {
-                camposValidos = false;
-                JOptionPane.showMessageDialog(this, "El formato del correo electrónico no es válido.",
-                        "Error de validación", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+//         // Validar el campo txtCorreos
+//         if (!_validador.validarCampoVacio(txtCorreos, "Correo")) {
+//             camposValidos = false;
+//         } else {
+//             if (!_validador.validarCorreo(txtCorreos.getText())) {
+//                 camposValidos = false;
+//                 JOptionPane.showMessageDialog(this, "El formato del correo electrónico no es válido.",
+//                         "Error de validación", JOptionPane.ERROR_MESSAGE);
+//             }
+//         }
 
-        Date fechaElegida = dateChooser.getDate();
-        if (fechaElegida == null) {
-            JOptionPane.showMessageDialog(this, "La fecha de nacimiento no ha sido seleccionada.",
-                    "Error de validación", JOptionPane.ERROR_MESSAGE);
-            camposValidos = false;
-        }
-        return camposValidos;
-    }
+//         Date fechaElegida = dateChooser.getDate();
+//         if (fechaElegida == null) {
+//             JOptionPane.showMessageDialog(this, "La fecha de nacimiento no ha sido seleccionada.",
+//                     "Error de validación", JOptionPane.ERROR_MESSAGE);
+//             camposValidos = false;
+//         }
+//         return camposValidos;
+//     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-//     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+//     /**
+//      * This method is called from within the constructor to initialize the form.
+//      * WARNING: Do NOT modify this code. The content of this method is always
+//      * regenerated by the Form Editor.
+//      */
+// //     @SuppressWarnings("unchecked")
+//     // <editor-fold defaultstate="collapsed" desc="Generated
+//     // <editor-fold defaultstate="collapsed" desc="Generated
+//     // <editor-fold defaultstate="collapsed" desc="Generated
+//     // Code">//GEN-BEGIN:initComponents
+//     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
-        txtNombres = new javax.swing.JTextField();
-        lblNombres = new javax.swing.JLabel();
-        txtApellidos = new javax.swing.JTextField();
-        lblApellidos = new javax.swing.JLabel();
-        txtCorreos = new javax.swing.JTextField();
-        lblCorreo = new javax.swing.JLabel();
-        lblFechaNacimiento = new javax.swing.JLabel();
-        dateChooser = new com.toedter.calendar.JDateChooser();
-        lblClienteTitulo = new javax.swing.JLabel();
-        btnGuardarCliente = new javax.swing.JButton();
+//         jTextField1 = new javax.swing.JTextField();
+//         txtNombres = new javax.swing.JTextField();
+//         lblNombres = new javax.swing.JLabel();
+//         txtApellidos = new javax.swing.JTextField();
+//         lblApellidos = new javax.swing.JLabel();
+//         txtCorreos = new javax.swing.JTextField();
+//         lblCorreo = new javax.swing.JLabel();
+//         lblFechaNacimiento = new javax.swing.JLabel();
+//         dateChooser = new com.toedter.calendar.JDateChooser();
+//         lblClienteTitulo = new javax.swing.JLabel();
+//         btnGuardarCliente = new javax.swing.JButton();
 
-        jTextField1.setText("jTextField1");
+//         jTextField1.setText("jTextField1");
 
-        lblNombres.setText("Nombres");
+//         lblNombres.setText("Nombres");
 
-        lblApellidos.setText("Apellidos");
+//         lblApellidos.setText("Apellidos");
 
-        lblCorreo.setText("Correo");
+//         lblCorreo.setText("Correo");
 
-        lblFechaNacimiento.setText("Fecha Nacimiento");
+//         lblFechaNacimiento.setText("Fecha Nacimiento");
 
-        dateChooser.setDateFormatString("yyyy-MM-dd");
+//         dateChooser.setDateFormatString("yyyy-MM-dd");
 
-        lblClienteTitulo.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        lblClienteTitulo.setText("Cliente");
+//         lblClienteTitulo.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+//         lblClienteTitulo.setText("Cliente");
 
-        btnGuardarCliente.setText("Guardar");
+//         btnGuardarCliente.setText("Guardar");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblClienteTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 137,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(232, 232, 232))
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(112, 112, 112)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(lblNombres)
-                                                        .addComponent(lblApellidos)
-                                                        .addComponent(lblCorreo))
-                                                .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                .addGap(105, 105, 105)
-                                                                .addGroup(layout.createParallelGroup(
-                                                                        javax.swing.GroupLayout.Alignment.LEADING)
-                                                                        .addComponent(dateChooser,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                218,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                        .addComponent(txtCorreos,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                221,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                        .addComponent(btnGuardarCliente)))
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
-                                                                .createSequentialGroup()
-                                                                .addPreferredGap(
-                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addGroup(layout.createParallelGroup(
-                                                                        javax.swing.GroupLayout.Alignment.LEADING)
-                                                                        .addComponent(txtNombres,
-                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                221,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                        .addComponent(txtApellidos,
-                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                221,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                                        .addComponent(lblFechaNacimiento))
-                                .addContainerGap(113, Short.MAX_VALUE)));
-        layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addComponent(lblClienteTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 53,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(46, 46, 46)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(txtNombres, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblNombres))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblApellidos)
-                                        .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblCorreo)
-                                        .addComponent(txtCorreos, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(lblFechaNacimiento)
-                                        .addComponent(dateChooser, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86,
-                                        Short.MAX_VALUE)
-                                .addComponent(btnGuardarCliente)
-                                .addGap(34, 34, 34)));
-    }// </editor-fold>//GEN-END:initComponents
+//         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+//         this.setLayout(layout);
+//         layout.setHorizontalGroup(
+//                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+//                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//                                 .addComponent(lblClienteTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 137,
+//                                         javax.swing.GroupLayout.PREFERRED_SIZE)
+//                                 .addGap(232, 232, 232))
+//                         .addGroup(layout.createSequentialGroup()
+//                                 .addGap(112, 112, 112)
+//                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                                         .addGroup(layout.createSequentialGroup()
+//                                                 .addGroup(layout
+//                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                                                         .addComponent(lblNombres)
+//                                                         .addComponent(lblApellidos)
+//                                                         .addComponent(lblCorreo))
+//                                                 .addGroup(layout
+//                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                                                         .addGroup(layout.createSequentialGroup()
+//                                                                 .addGap(105, 105, 105)
+//                                                                 .addGroup(layout.createParallelGroup(
+//                                                                         javax.swing.GroupLayout.Alignment.LEADING)
+//                                                                         .addComponent(dateChooser,
+//                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
+//                                                                                 218,
+//                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
+//                                                                         .addComponent(txtCorreos,
+//                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
+//                                                                                 221,
+//                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
+//                                                                         .addComponent(btnGuardarCliente)))
+//                                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
+//                                                                 .createSequentialGroup()
+//                                                                 .addPreferredGap(
+//                                                                         javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+//                                                                 .addGroup(layout.createParallelGroup(
+//                                                                         javax.swing.GroupLayout.Alignment.LEADING)
+//                                                                         .addComponent(txtNombres,
+//                                                                                 javax.swing.GroupLayout.Alignment.TRAILING,
+//                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
+//                                                                                 221,
+//                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
+//                                                                         .addComponent(txtApellidos,
+//                                                                                 javax.swing.GroupLayout.Alignment.TRAILING,
+//                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
+//                                                                                 221,
+//                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)))))
+//                                         .addComponent(lblFechaNacimiento))
+//                                 .addContainerGap(113, Short.MAX_VALUE)));
+//         layout.setVerticalGroup(
+//                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                         .addGroup(layout.createSequentialGroup()
+//                                 .addGap(16, 16, 16)
+//                                 .addComponent(lblClienteTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 53,
+//                                         javax.swing.GroupLayout.PREFERRED_SIZE)
+//                                 .addGap(46, 46, 46)
+//                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+//                                         .addComponent(txtNombres, javax.swing.GroupLayout.PREFERRED_SIZE,
+//                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
+//                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
+//                                         .addComponent(lblNombres))
+//                                 .addGap(18, 18, 18)
+//                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+//                                         .addComponent(lblApellidos)
+//                                         .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE,
+//                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
+//                                                 javax.swing.GroupLayout.PREFERRED_SIZE))
+//                                 .addGap(18, 18, 18)
+//                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+//                                         .addComponent(lblCorreo)
+//                                         .addComponent(txtCorreos, javax.swing.GroupLayout.PREFERRED_SIZE,
+//                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
+//                                                 javax.swing.GroupLayout.PREFERRED_SIZE))
+//                                 .addGap(18, 18, 18)
+//                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                                         .addComponent(lblFechaNacimiento)
+//                                         .addComponent(dateChooser, javax.swing.GroupLayout.PREFERRED_SIZE,
+//                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
+//                                                 javax.swing.GroupLayout.PREFERRED_SIZE))
+//                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86,
+//                                         Short.MAX_VALUE)
+//                                 .addComponent(btnGuardarCliente)
+//                                 .addGap(34, 34, 34)));
+//     }// </editor-fold>//GEN-END:initComponents
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                JFrame frame = new JFrame("Cliente App");
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setSize(600, 400);
+//     public static void main(String[] args) {
+//         SwingUtilities.invokeLater(new Runnable() {
+//             @Override
+//             public void run() {
+//                 JFrame frame = new JFrame("Cliente App");
+//                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//                 frame.setSize(600, 400);
 
-                ClienteGUI clientePanel = new ClienteGUI();
-                frame.add(clientePanel);
+//                 ClienteGUI clientePanel = new ClienteGUI();
+//                 frame.add(clientePanel);
 
-                frame.setVisible(true);
-            }
-        });
-    }
+//                 frame.setVisible(true);
+//             }
+//         });
+//     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnGuardarCliente;
-    private com.toedter.calendar.JDateChooser dateChooser;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JLabel lblApellidos;
-    private javax.swing.JLabel lblClienteTitulo;
-    private javax.swing.JLabel lblCorreo;
-    private javax.swing.JLabel lblFechaNacimiento;
-    private javax.swing.JLabel lblNombres;
-    private javax.swing.JTextField txtApellidos;
-    private javax.swing.JTextField txtCorreos;
-    private javax.swing.JTextField txtNombres;
-    // End of variables declaration//GEN-END:variables
-}
+//     // Variables declaration - do not modify//GEN-BEGIN:variables
+//     private javax.swing.JButton btnGuardarCliente;
+//     private com.toedter.calendar.JDateChooser dateChooser;
+//     private javax.swing.JTextField jTextField1;
+//     private javax.swing.JLabel lblApellidos;
+//     private javax.swing.JLabel lblClienteTitulo;
+//     private javax.swing.JLabel lblCorreo;
+//     private javax.swing.JLabel lblFechaNacimiento;
+//     private javax.swing.JLabel lblNombres;
+//     private javax.swing.JTextField txtApellidos;
+//     private javax.swing.JTextField txtCorreos;
+//     private javax.swing.JTextField txtNombres;
+//     // End of variables declaration//GEN-END:variables
+// }

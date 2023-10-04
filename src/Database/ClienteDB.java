@@ -1,122 +1,85 @@
 package Database;
 
 import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import Clases.Cliente;
-/**
- *
- * @author Brandon Emmanuel Reséndiz Granados, Ruben Lora Cruz, Alejandro Avila Rangel
- * 
- */
+
 public class ClienteDB {
-    public AccessHandler _dbHandler = new AccessHandler();
 
-    public ClienteDB() {
-        _dbHandler = new AccessHandler();
-    }
-
-    public boolean insertarCliente(Cliente cliente) {
-        boolean inserted = false;
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String fechaFormateada = dateFormat.format(cliente.getFechaNacimiento());
-        try {
-            String query = "INSERT INTO Cliente (Nombre, Apellido, Correo, FechaNacimiento) VALUES ("
-                    + "'" + cliente.getNombre() + "', '" + cliente.getApellido() + "', '"
-                    + cliente.getCorreo() + "', '" + fechaFormateada + "')";
-            if (_dbHandler.conectar()) {
-                _dbHandler.ejecutarComando(query);
-                _dbHandler.desconectar();
-                inserted = true;
-            }
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-        return inserted;
-    }
-
-    public List<Cliente> GetClientes() {
+    public List<Cliente> readAll() {
         List<Cliente> clientes = new ArrayList<>();
-        ResultSet resultSet = null;
+        MysqlHandler mysqlHandler = MysqlHandler.getInstance();
+        mysqlHandler.openConnection();
+        ResultSet resultSet = mysqlHandler.readData("SELECT * FROM cliente");
         try {
-            String query = "SELECT * FROM Cliente";
-            if (_dbHandler.conectar()) {
-                resultSet = _dbHandler.leerDatos(query);
-                _dbHandler.desconectar();
-
-                while (resultSet.next()) {
-                    Cliente cliente = new Cliente(); // create a new instance for each record
-                    cliente.setId_Cliente(resultSet.getInt("Id_Cliente"));
-                    cliente.setNombre(resultSet.getString("Nombre"));
-                    cliente.setApellido(resultSet.getString("Apellido"));
-                    cliente.setCorreo(resultSet.getString("Correo"));
-                    cliente.setFechaNacimiento(resultSet.getDate("FechaNacimiento"));
-                    clientes.add(cliente);
-                }
+            while (resultSet.next()) {
+                int id = resultSet.getInt("ID_Cliente");
+                String nombres = resultSet.getString("Nombre");
+                String apellidos = resultSet.getString("Apellido");
+                String correo = resultSet.getString("Correo");
+                Date fechaNacimiento = resultSet.getDate("FechaNacimiento");
+                Cliente cliente = new Cliente(id, nombres, apellidos, correo, fechaNacimiento);
+                clientes.add(cliente);
             }
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        mysqlHandler.closeConnection();
         return clientes;
     }
 
-    public boolean EliminarCliente(int Id) {
-        boolean deleted = false;
-        try {
-            String query = "DELETE FROM Cliente WHERE Id_Cliente = " + Id;
-            if (_dbHandler.conectar()) {
-                _dbHandler.ejecutarComando(query);
-                _dbHandler.desconectar();
-                deleted = true;
-            }
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-        return deleted;
+    public boolean create(Cliente cliente) {
+        MysqlHandler mysqlHandler = MysqlHandler.getInstance();
+        mysqlHandler.openConnection();
+        String query = "INSERT INTO cliente (Nombre, Apellido, Correo, FechaNacimiento) VALUES ('" + cliente.getNombre()
+                + "', '" + cliente.getApellido() + "', '" + cliente.getCorreo() + "', '" + cliente.getFechaNacimiento()
+                + "')";
+        boolean success = mysqlHandler.insertData(query);
+        mysqlHandler.closeConnection();
+        return success;
     }
 
-    public boolean ActualizarCliente(Cliente cliente) {
-        boolean updated = false;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String fechaFormateada = dateFormat.format(cliente.getFechaNacimiento());
-
-        try {
-            String query = "UPDATE Cliente SET Nombre = '" + cliente.getNombre() + "', Apellido = '"
-                    + cliente.getApellido() + "', Correo = '" + cliente.getCorreo() + "', FechaNacimiento = '"
-                    + fechaFormateada + "' WHERE Id_Cliente = " + cliente.getId_Cliente();
-            if (_dbHandler.conectar()) {
-                _dbHandler.ejecutarComando(query);
-                _dbHandler.desconectar();
-                updated = true;
-            }
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-        return updated;
+    public boolean update(Cliente cliente) {
+        MysqlHandler mysqlHandler = MysqlHandler.getInstance();
+        mysqlHandler.openConnection();
+        String query = "UPDATE cliente SET Nombre = '" + cliente.getNombre() + "', Apellido = '" + cliente.getApellido()
+                + "', Correo = '" + cliente.getCorreo() + "', FechaNacimiento = '" + cliente.getFechaNacimiento()
+                + "' WHERE ID_Cliente = " + cliente.getId_Cliente();
+        boolean success = mysqlHandler.updateData(query);
+        mysqlHandler.closeConnection();
+        return success;
     }
 
-    public Cliente GetClienteById(int Id) {
-        Cliente cliente = new Cliente();
-        ResultSet resultSet = null;
-        try {
-            String query = "SELECT * FROM Cliente WHERE Id_Cliente = " + Id;
-            if (_dbHandler.conectar()) {
-                resultSet = _dbHandler.leerDatos(query);
-                _dbHandler.desconectar();
+    public boolean delete(int id) {
+        MysqlHandler mysqlHandler = MysqlHandler.getInstance();
+        mysqlHandler.openConnection();
+        String query = "DELETE FROM cliente WHERE Id_Cliente = " + id;
+        boolean success = mysqlHandler.deleteData(query);
+        mysqlHandler.closeConnection();
+        return success;
+    }
 
-                while (resultSet.next()) {
-                    cliente.setNombre(resultSet.getString("Nombre"));
-                    cliente.setApellido(resultSet.getString("Apellido"));
-                    cliente.setCorreo(resultSet.getString("Correo"));
-                    cliente.setFechaNacimiento(resultSet.getDate("FechaNacimiento"));
-                }
+    public Cliente getClienteById(int id) {
+        Cliente cliente = null;
+        MysqlHandler mysqlHandler = MysqlHandler.getInstance();
+        mysqlHandler.openConnection();
+        ResultSet resultSet = mysqlHandler.readData("SELECT * FROM cliente WHERE Id_Cliente = " + id);
+        try {
+            while (resultSet.next()) {
+                String nombres = resultSet.getString("Nombre");
+                String apellidos = resultSet.getString("Apellido");
+                String correo = resultSet.getString("Correo");
+                Date fechaNacimiento = resultSet.getDate("FechaNacimiento");
+                cliente = new Cliente(id, nombres, apellidos, correo, fechaNacimiento);
             }
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        mysqlHandler.closeConnection();
         return cliente;
     }
 }

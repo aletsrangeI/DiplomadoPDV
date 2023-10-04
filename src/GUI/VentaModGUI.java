@@ -4,16 +4,21 @@
  */
 package GUI;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import Clases.Cliente;
 import Clases.Validador;
+import Clases.ValoresCombo;
+import Clases.Venta;
 import Database.ClienteDB;
+import Database.VentaDB;
 
 /**
  *
@@ -21,18 +26,32 @@ import Database.ClienteDB;
  *         Rangel
  * 
  */
-public class ClienteModGUI extends javax.swing.JPanel {
+public class VentaModGUI extends javax.swing.JPanel {
     private Validador _validador = new Validador();
+    private VentaDB _ventaDB = new VentaDB();
     private ClienteDB _clienteDB = new ClienteDB();
-    private List<Cliente> listaClientes;
+    private List<Venta> listaVentas;
     private int indiceActual = 0;
 
     /**
      * Creates new form ClienteModGUI
      */
-    public ClienteModGUI() {
+    public VentaModGUI() {
         initComponents();
-        listaClientes = CargarDatos();
+
+        List<ValoresCombo> valoresComboList = new ArrayList<>();
+        List<Cliente> clientes = _clienteDB.readAll();
+
+        for (Cliente cliente : clientes) {
+            valoresComboList.add(new ValoresCombo(cliente.getId_Cliente(), cliente.getNombre()));
+        }
+
+        ValoresCombo[] valoresComboArray = valoresComboList.toArray(new ValoresCombo[0]);
+
+        DefaultComboBoxModel<ValoresCombo> comboBoxModel = new DefaultComboBoxModel<>(valoresComboArray);
+        cmbCliente.setModel(comboBoxModel);
+
+        listaVentas = CargarDatos();
         mostrarClienteActual();
         disableAllFields();
         btnEditar.setEnabled(false);
@@ -61,19 +80,19 @@ public class ClienteModGUI extends javax.swing.JPanel {
                     return;
                 }
 
-                String nombres = txtNombre.getText();
-                String apellidos = txtApellidos.getText();
-                String correo = txtCorreo.getText();
-                Date fechaNacimiento = dateChooser.getDate();
+                // Get selected value from cmbCliente and assign it to id_Cliente
+                int id_Cliente = ((ValoresCombo) cmbCliente.getSelectedItem()).getId();
+                double total = Double.parseDouble(txtTotal.getText());
+                Date fecha = dateChooser.getDate();
 
-                Cliente cliente = new Cliente(0, nombres, apellidos, correo, fechaNacimiento);
+                Venta venta = new Venta(0, id_Cliente, fecha, total);
 
-                if (_clienteDB.create(cliente)) {
-                    JOptionPane.showMessageDialog(null, "Cliente insertado correctamente.");
+                if (_ventaDB.create(venta)) {
+                    JOptionPane.showMessageDialog(null, "Venta insertado correctamente.");
                     limpiarCampos();
-                    listaClientes = CargarDatos();
+                    listaVentas = CargarDatos();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error al insertar el cliente.");
+                    JOptionPane.showMessageDialog(null, "Error al insertar la venta.");
                 }
             }
         });
@@ -90,20 +109,20 @@ public class ClienteModGUI extends javax.swing.JPanel {
                 if (!validarCampos()) {
                     return;
                 }
-                int id_Cliente = Integer.parseInt(txtId_Cliente.getText());
-                String nombres = txtNombre.getText();
-                String apellidos = txtApellidos.getText();
-                String correo = txtCorreo.getText();
-                Date fechaNacimiento = dateChooser.getDate();
 
-                Cliente cliente = new Cliente(id_Cliente, nombres, apellidos, correo, fechaNacimiento);
+                int id_Venta = Integer.parseInt(txtId_Venta.getText());
+                int id_Cliente = ((ValoresCombo) cmbCliente.getSelectedItem()).getId();
+                double total = Double.parseDouble(txtTotal.getText());
+                Date fecha = dateChooser.getDate();
 
-                if (_clienteDB.update(cliente)) {
-                    JOptionPane.showMessageDialog(null, "Cliente actualizado correctamente.");
-                    listaClientes = CargarDatos();
+                Venta venta = new Venta(id_Venta, id_Cliente, fecha, total);
+
+                if (_ventaDB.update(venta)) {
+                    JOptionPane.showMessageDialog(null, "Venta actualizada correctamente.");
+                    listaVentas = CargarDatos();
                     mostrarClienteActual();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error al actualizar el cliente.");
+                    JOptionPane.showMessageDialog(null, "Error al actualizar la venta.");
                 }
             }
         });
@@ -111,38 +130,37 @@ public class ClienteModGUI extends javax.swing.JPanel {
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
-                int id_Cliente = Integer.parseInt(txtId_Cliente.getText());
+                int id_Venta = Integer.parseInt(txtId_Venta.getText());
 
-                if (_clienteDB.delete(id_Cliente)) {
-                    JOptionPane.showMessageDialog(null, "Cliente eliminado correctamente.");
+                if (_ventaDB.delete(id_Venta)) {
+                    JOptionPane.showMessageDialog(null, "Venta eliminada correctamente.");
                     limpiarCampos();
-                    listaClientes = CargarDatos();
+                    listaVentas = CargarDatos();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error al eliminar el cliente.");
+                    JOptionPane.showMessageDialog(null, "Error al eliminar la venta.");
                 }
             }
         });
     }
 
-    private List<Cliente> CargarDatos() {
-        _clienteDB = new ClienteDB();
-        List<Cliente> clientes = _clienteDB.readAll();
-        return clientes;
+    private List<Venta> CargarDatos() {
+        _ventaDB = new VentaDB();
+        List<Venta> ventas = _ventaDB.readAll();
+        return ventas;
     }
 
     private void mostrarClienteActual() {
-        if (!listaClientes.isEmpty()) {
-            Cliente cliente = listaClientes.get(indiceActual);
-            txtId_Cliente.setText(String.valueOf(cliente.getId_Cliente()));
-            txtNombre.setText(cliente.getNombre());
-            txtApellidos.setText(cliente.getApellido());
-            txtCorreo.setText(cliente.getCorreo());
-            dateChooser.setDate(cliente.getFechaNacimiento());
+        if (!listaVentas.isEmpty()) {
+            Venta venta = listaVentas.get(indiceActual);
+            txtId_Venta.setText(String.valueOf(venta.getId_Venta()));
+            txtTotal.setText(String.valueOf(venta.getTotal()));
+            dateChooser.setDate(venta.getFecha());
+            cmbCliente.setSelectedIndex(venta.getId_Cliente() - 1);
         }
     }
 
     private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {
-        if (indiceActual < listaClientes.size() - 1) {
+        if (indiceActual < listaVentas.size() - 1) {
             indiceActual++;
             mostrarClienteActual();
             disableAllFields();
@@ -159,32 +177,22 @@ public class ClienteModGUI extends javax.swing.JPanel {
 
     // validate if the fields are not disabled
     private boolean AllFieldsAreDisabled() {
-        return !txtNombre.isEnabled() && !txtApellidos.isEnabled() && !txtCorreo.isEnabled()
+        return !txtTotal.isEnabled() && !txtTotal.isEnabled()
                 && !dateChooser.isEnabled();
     }
 
     private boolean validarCampos() {
         boolean camposValidos = true;
 
-        // Validar el campo txtNombres
-        if (!_validador.validarCampoVacio(txtNombre, "Nombres")) {
+        // validate empty fields
+        if (!_validador.validarCampoVacio(txtTotal, "Total")) {
             camposValidos = false;
         }
 
-        // Validar el campo txtApellidos
-        if (!_validador.validarCampoVacio(txtApellidos, "Apellidos")) {
+        if (!_validador.validarNumeroConDosDecimales(txtTotal.getText())) {
+            JOptionPane.showMessageDialog(this, "El total no es válido.",
+                    "Error de validación", JOptionPane.ERROR_MESSAGE);
             camposValidos = false;
-        }
-
-        // Validar el campo txtCorreos
-        if (!_validador.validarCampoVacio(txtCorreo, "Correo")) {
-            camposValidos = false;
-        } else {
-            if (!_validador.validarCorreo(txtCorreo.getText())) {
-                camposValidos = false;
-                JOptionPane.showMessageDialog(this, "El formato del correo electrónico no es válido.",
-                        "Error de validación", JOptionPane.ERROR_MESSAGE);
-            }
         }
 
         Date fechaElegida = dateChooser.getDate();
@@ -197,26 +205,22 @@ public class ClienteModGUI extends javax.swing.JPanel {
     }
 
     public void limpiarCampos() {
-        txtNombre.setText("");
-        txtApellidos.setText("");
-        txtCorreo.setText("");
+        txtTotal.setText("");
         dateChooser.setDate(null);
     }
 
     public void disableAllFields() {
-        txtId_Cliente.setEnabled(false);
-        txtNombre.setEnabled(false);
-        txtApellidos.setEnabled(false);
-        txtCorreo.setEnabled(false);
+        txtId_Venta.setEnabled(false);
+        txtTotal.setEnabled(false);
         dateChooser.setEnabled(false);
+        cmbCliente.setEnabled(false);
         btnEditar.setEnabled(false);
     }
 
     public void enableAllFields() {
-        txtNombre.setEnabled(true);
-        txtApellidos.setEnabled(true);
-        txtCorreo.setEnabled(true);
+        txtTotal.setEnabled(true);
         dateChooser.setEnabled(true);
+        cmbCliente.setEnabled(true);
         btnEditar.setEnabled(true);
     }
 
@@ -228,8 +232,8 @@ public class ClienteModGUI extends javax.swing.JPanel {
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setSize(600, 400);
 
-                ClienteModGUI clienteMod = new ClienteModGUI();
-                frame.add(clienteMod);
+                VentaModGUI ventaMod = new VentaModGUI();
+                frame.add(ventaMod);
 
                 frame.setVisible(true);
             }
@@ -244,17 +248,15 @@ public class ClienteModGUI extends javax.swing.JPanel {
     // @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblId_Cliente = new javax.swing.JLabel();
-        txtId_Cliente = new javax.swing.JTextField();
+        lblId_Venta = new javax.swing.JLabel();
+        txtId_Venta = new javax.swing.JTextField();
         lblNombre = new javax.swing.JLabel();
-        txtNombre = new javax.swing.JTextField();
-        lblApellido = new javax.swing.JLabel();
-        txtApellidos = new javax.swing.JTextField();
-        txtCorreo = new javax.swing.JTextField();
-        lblCorreo = new javax.swing.JLabel();
+        lblTotal = new javax.swing.JLabel();
+        txtTotal = new javax.swing.JTextField();
         dateChooser = new com.toedter.calendar.JDateChooser();
         lblFechaNacimiento = new javax.swing.JLabel();
         btnAnterior = new javax.swing.JButton();
@@ -264,18 +266,17 @@ public class ClienteModGUI extends javax.swing.JPanel {
         btnEliminar = new javax.swing.JButton();
         lblTitulo = new javax.swing.JLabel();
         btnEnable = new javax.swing.JButton();
+        cmbCliente = new javax.swing.JComboBox<>();
 
         setPreferredSize(new java.awt.Dimension(600, 400));
 
-        lblId_Cliente.setText("Id_Cliente");
+        lblId_Venta.setText("Id_Venta");
 
-        lblNombre.setText("Nombre");
+        lblNombre.setText("Cliente");
 
-        lblApellido.setText("Apellidos");
+        lblTotal.setText("Total");
 
-        lblCorreo.setText("Correo");
-
-        lblFechaNacimiento.setText("Fecha Nacimiento");
+        lblFechaNacimiento.setText("Fecha");
 
         btnAnterior.setText("< Anterior");
 
@@ -288,9 +289,11 @@ public class ClienteModGUI extends javax.swing.JPanel {
         btnEliminar.setText("Eliminar");
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lblTitulo.setText("Cliente");
+        lblTitulo.setText("Venta");
 
         btnEnable.setText("Activar Campos!");
+
+        cmbCliente.setModel(new DefaultComboBoxModel<>(new ValoresCombo[0]));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -299,61 +302,61 @@ public class ClienteModGUI extends javax.swing.JPanel {
                         .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(layout.createSequentialGroup()
-                                                .addGap(40, 40, 40)
-                                                .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(lblFechaNacimiento)
-                                                        .addComponent(btnAnterior))
+                                                .addGap(52, 52, 52)
+                                                .addComponent(btnAnterior)
                                                 .addGap(16, 16, 16))
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
                                                 .createSequentialGroup()
                                                 .addContainerGap()
                                                 .addGroup(layout
                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(lblId_Cliente,
+                                                        .addComponent(lblId_Venta,
                                                                 javax.swing.GroupLayout.Alignment.TRAILING)
                                                         .addComponent(lblNombre,
                                                                 javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(lblApellido,
+                                                        .addComponent(lblTotal,
                                                                 javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(lblCorreo,
+                                                        .addComponent(lblFechaNacimiento,
                                                                 javax.swing.GroupLayout.Alignment.TRAILING))
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout
                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(txtCorreo,
+                                                        .addComponent(txtTotal,
                                                                 javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(txtApellidos,
-                                                                javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(txtNombre)
                                                         .addComponent(dateChooser, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                112, Short.MAX_VALUE))
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(cmbCliente,
+                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE, 136,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
                                                 .addGroup(layout
                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addGroup(layout.createSequentialGroup()
-                                                                .addGap(187, 187, 187)
+                                                                .addGap(163, 163, 163)
                                                                 .addGroup(layout.createParallelGroup(
                                                                         javax.swing.GroupLayout.Alignment.TRAILING)
-                                                                        .addComponent(btnSiguiente)
                                                                         .addGroup(layout.createSequentialGroup()
                                                                                 .addGroup(layout.createParallelGroup(
                                                                                         javax.swing.GroupLayout.Alignment.LEADING)
                                                                                         .addComponent(btnEditar)
                                                                                         .addComponent(btnEliminar)
                                                                                         .addComponent(btnGuardar))
-                                                                                .addGap(41, 41, 41)))
+                                                                                .addGap(41, 41, 41))
+                                                                        .addComponent(btnSiguiente))
                                                                 .addGap(35, 35, 35))
                                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
                                                                 .createSequentialGroup()
                                                                 .addPreferredGap(
-                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+                                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                        Short.MAX_VALUE)
                                                                 .addComponent(btnEnable)
                                                                 .addGap(53, 53, 53))))
                                         .addGroup(layout.createSequentialGroup()
-                                                .addComponent(txtId_Cliente, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                        136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(txtId_Venta, javax.swing.GroupLayout.PREFERRED_SIZE, 136,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addContainerGap())))
                         .addGroup(layout.createSequentialGroup()
                                 .addGap(267, 267, 267)
@@ -366,8 +369,8 @@ public class ClienteModGUI extends javax.swing.JPanel {
                                 .addComponent(lblTitulo)
                                 .addGap(33, 33, 33)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblId_Cliente)
-                                        .addComponent(txtId_Cliente, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        .addComponent(lblId_Venta)
+                                        .addComponent(txtId_Venta, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
@@ -376,32 +379,25 @@ public class ClienteModGUI extends javax.swing.JPanel {
                                                 .addGroup(layout
                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                         .addComponent(lblNombre)
-                                                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(18, 18, 18)
-                                                .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(lblApellido)
-                                                        .addComponent(txtApellidos,
+                                                        .addComponent(cmbCliente,
                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                 javax.swing.GroupLayout.PREFERRED_SIZE))
                                                 .addGap(18, 18, 18)
                                                 .addGroup(layout
                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        .addComponent(lblTotal)
+                                                        .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(lblCorreo))
-                                                .addGap(27, 27, 27)
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(18, 18, 18)
                                                 .addGroup(layout
                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addComponent(lblFechaNacimiento)
                                                         .addComponent(dateChooser,
                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(lblFechaNacimiento)))
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(btnEliminar)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -410,12 +406,12 @@ public class ClienteModGUI extends javax.swing.JPanel {
                                                 .addComponent(btnGuardar)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(btnEnable)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66,
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101,
                                         Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(btnAnterior)
                                         .addComponent(btnSiguiente))
-                                .addGap(28, 28, 28)));
+                                .addGap(34, 34, 34)));
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -425,16 +421,14 @@ public class ClienteModGUI extends javax.swing.JPanel {
     private javax.swing.JButton btnEnable;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnSiguiente;
+    private javax.swing.JComboBox<ValoresCombo> cmbCliente;
     private com.toedter.calendar.JDateChooser dateChooser;
-    private javax.swing.JLabel lblApellido;
-    private javax.swing.JLabel lblCorreo;
     private javax.swing.JLabel lblFechaNacimiento;
-    private javax.swing.JLabel lblId_Cliente;
+    private javax.swing.JLabel lblId_Venta;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblTitulo;
-    private javax.swing.JTextField txtApellidos;
-    private javax.swing.JTextField txtCorreo;
-    private javax.swing.JTextField txtId_Cliente;
-    private javax.swing.JTextField txtNombre;
+    private javax.swing.JLabel lblTotal;
+    private javax.swing.JTextField txtId_Venta;
+    private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 }

@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class MysqlHandler {
     private static MysqlHandler instance = null;
     private Connection connection = null;
-    //url with the database name, user and password and mexico city timezone
+    // url with the database name, user and password and mexico city timezone
     private final String url = "jdbc:mysql://localhost:3306/puntodeventa?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     private final String user = "sa";
     private final String password = "1234";

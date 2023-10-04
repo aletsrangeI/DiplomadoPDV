@@ -3,14 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/Alecs/OneDrive/Documentos/NetBeansProjects/PuntoDeVenta_Equipo3/src/GUI/ClienteModGUI.java</file>
             <file>file:/C:/Users/Alecs/OneDrive/Documentos/NetBeansProjects/PuntoDeVenta_Equipo3/src/GUI/ClienteGUI.java</file>
             <file>file:/C:/Users/Alecs/OneDrive/Documentos/NetBeansProjects/PuntoDeVenta_Equipo3/src/GUI/TablaClientes.java</file>
-            <file>file:/C:/Users/Alecs/OneDrive/Documentos/NetBeansProjects/PuntoDeVenta_Equipo3/src/GUI/ClienteModGUI.java</file>
-            <file>file:/C:/Users/Alecs/OneDrive/Documentos/NetBeansProjects/PuntoDeVenta_Equipo3/src/Database/ProductoDB.java</file>
-            <file>file:/C:/Users/Alecs/OneDrive/Documentos/NetBeansProjects/PuntoDeVenta_Equipo3/src/GUI/VentaGUI.java</file>
+            <file>file:/C:/Users/Alecs/OneDrive/Documentos/NetBeansProjects/PuntoDeVenta_Equipo3/src/GUI/VentaModGUI.java</file>
             <file>file:/C:/Users/Alecs/OneDrive/Documentos/NetBeansProjects/PuntoDeVenta_Equipo3/src/GUI/ProductoModGUI.java</file>
-            <file>file:/C:/Users/Alecs/OneDrive/Documentos/NetBeansProjects/PuntoDeVenta_Equipo3/src/GUI/DetalleVentaGUI.java</file>
-            <file>file:/C:/Users/Alecs/OneDrive/Documentos/NetBeansProjects/PuntoDeVenta_Equipo3/src/Database/MysqlHandler.java</file>
         </group>
     </open-files>
 </project-private>

@@ -1,215 +1,215 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
-package GUI;
+// /*
+//  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+//  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+//  */
+// package GUI;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+// import java.awt.event.ActionEvent;
+// import java.awt.event.ActionListener;
+// import java.util.ArrayList;
+// import java.util.Date;
+// import java.util.List;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-import Clases.Cliente;
-import Clases.Validador;
-import Database.ClienteDB;
-import Clases.ValoresCombo;
+// import javax.swing.DefaultComboBoxModel;
+// import javax.swing.JFrame;
+// import javax.swing.JOptionPane;
+// import javax.swing.SwingUtilities;
+// import Clases.Cliente;
+// import Clases.Validador;
+// import Database.ClienteDBAccess;
+// import Clases.ValoresCombo;
 
-/**
- *
- * @author Brandon Emmanuel Reséndiz Granados, Ruben Lora Cruz, Alejandro Avila Rangel
- * 
- */
-public class VentaGUI extends javax.swing.JPanel {
+// /**
+//  *
+//  * @author Brandon Emmanuel Reséndiz Granados, Ruben Lora Cruz, Alejandro Avila Rangel
+//  * 
+//  */
+// public class VentaGUI extends javax.swing.JPanel {
 
-    /**
-     * Creates new form VentaGUI
-     */
-    private Validador _validador = new Validador();
-    private ClienteDB _clienteDB = new ClienteDB();
+//     /**
+//      * Creates new form VentaGUI
+//      */
+//     private Validador _validador = new Validador();
+//     private ClienteDBAccess _clienteDB = new ClienteDBAccess();
 
-    public VentaGUI() {
-        _validador = new Validador();
-        _clienteDB = new ClienteDB();
-        initComponents();
+//     public VentaGUI() {
+//         _validador = new Validador();
+//         _clienteDB = new ClienteDBAccess();
+//         initComponents();
 
-        List<Cliente> clientes = _clienteDB.GetClientes();
-        List<ValoresCombo> valoresComboList = new ArrayList<>();
+//         List<Cliente> clientes = _clienteDB.GetClientes();
+//         List<ValoresCombo> valoresComboList = new ArrayList<>();
 
-        for (Cliente cliente : clientes) {
-            valoresComboList.add(new ValoresCombo(cliente.getId_Cliente(), cliente.getNombre()));
-        }
+//         for (Cliente cliente : clientes) {
+//             valoresComboList.add(new ValoresCombo(cliente.getId_Cliente(), cliente.getNombre()));
+//         }
 
-        ValoresCombo[] valoresComboArray = valoresComboList.toArray(new ValoresCombo[0]);
+//         ValoresCombo[] valoresComboArray = valoresComboList.toArray(new ValoresCombo[0]);
 
-        DefaultComboBoxModel<ValoresCombo> comboBoxModel = new DefaultComboBoxModel<>(valoresComboArray);
-        cmbCliente.setModel(comboBoxModel);
+//         DefaultComboBoxModel<ValoresCombo> comboBoxModel = new DefaultComboBoxModel<>(valoresComboArray);
+//         cmbCliente.setModel(comboBoxModel);
 
-        btnGuardar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                validarCampos();
+//         btnGuardar.addActionListener(new ActionListener() {
+//             @Override
+//             public void actionPerformed(ActionEvent e) {
+//                 validarCampos();
 
-                ValoresCombo selectedComboItem = (ValoresCombo) cmbCliente.getSelectedItem();
-                if (selectedComboItem != null) {
-                    int selectedId = selectedComboItem.getId();
-                    String selectedText = selectedComboItem.toString();
-                    System.out.println("Selected ID: " + selectedId);
-                    System.out.println("Selected Text: " + selectedText);
-                }
+//                 ValoresCombo selectedComboItem = (ValoresCombo) cmbCliente.getSelectedItem();
+//                 if (selectedComboItem != null) {
+//                     int selectedId = selectedComboItem.getId();
+//                     String selectedText = selectedComboItem.toString();
+//                     System.out.println("Selected ID: " + selectedId);
+//                     System.out.println("Selected Text: " + selectedText);
+//                 }
 
-            }
-        });
+//             }
+//         });
 
-    }
+//     }
 
-    public void limpiarCampos() {
-        txtTotal.setText("");
-        dateChooser.setDate(null);
-    }
+//     public void limpiarCampos() {
+//         txtTotal.setText("");
+//         dateChooser.setDate(null);
+//     }
 
-    private void validarCampos() {
-        boolean camposValidos = true;
-        if (!_validador.validarCampoVacio(txtTotal, "Precio")) {
-            camposValidos = false;
-        } else if (!txtTotal.getText().matches("^\\d+(\\.\\d{1,2})?$")) {
-            JOptionPane.showMessageDialog(null, "El precio debe ser un número con dos decimales.", "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            camposValidos = false;
-        } else if (Double.parseDouble(txtTotal.getText()) <= 0) {
-            JOptionPane.showMessageDialog(null, "El precio debe ser mayor que cero.", "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            camposValidos = false;
-        }
+//     private void validarCampos() {
+//         boolean camposValidos = true;
+//         if (!_validador.validarCampoVacio(txtTotal, "Precio")) {
+//             camposValidos = false;
+//         } else if (!txtTotal.getText().matches("^\\d+(\\.\\d{1,2})?$")) {
+//             JOptionPane.showMessageDialog(null, "El precio debe ser un número con dos decimales.", "Error",
+//                     JOptionPane.ERROR_MESSAGE);
+//             camposValidos = false;
+//         } else if (Double.parseDouble(txtTotal.getText()) <= 0) {
+//             JOptionPane.showMessageDialog(null, "El precio debe ser mayor que cero.", "Error",
+//                     JOptionPane.ERROR_MESSAGE);
+//             camposValidos = false;
+//         }
 
-        Date fechaElegida = dateChooser.getDate();
-        if (fechaElegida == null) {
-            JOptionPane.showMessageDialog(this, "La fecha de nacimiento no ha sido seleccionada.",
-                    "Error de validación", JOptionPane.ERROR_MESSAGE);
-            camposValidos = false;
-        }
-    }
+//         Date fechaElegida = dateChooser.getDate();
+//         if (fechaElegida == null) {
+//             JOptionPane.showMessageDialog(this, "La fecha de nacimiento no ha sido seleccionada.",
+//                     "Error de validación", JOptionPane.ERROR_MESSAGE);
+//             camposValidos = false;
+//         }
+//     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+//     /**
+//      * This method is called from within the constructor to initialize the form.
+//      * WARNING: Do NOT modify this code. The content of this method is always
+//      * regenerated by the Form Editor.
+//      */
+//     @SuppressWarnings("unchecked")
+//     // <editor-fold defaultstate="collapsed" desc="Generated
+//     // <editor-fold defaultstate="collapsed" desc="Generated
+//     // Code">//GEN-BEGIN:initComponents
+//     private void initComponents() {
 
-        lblTituloVenta = new javax.swing.JLabel();
-        lblTotal = new javax.swing.JLabel();
-        txtTotal = new javax.swing.JTextField();
-        dateChooser = new com.toedter.calendar.JDateChooser();
-        lblFecha = new javax.swing.JLabel();
-        cmbCliente = new javax.swing.JComboBox<>();
-        lblCliente = new javax.swing.JLabel();
-        btnGuardar = new javax.swing.JButton();
+//         lblTituloVenta = new javax.swing.JLabel();
+//         lblTotal = new javax.swing.JLabel();
+//         txtTotal = new javax.swing.JTextField();
+//         dateChooser = new com.toedter.calendar.JDateChooser();
+//         lblFecha = new javax.swing.JLabel();
+//         cmbCliente = new javax.swing.JComboBox<>();
+//         lblCliente = new javax.swing.JLabel();
+//         btnGuardar = new javax.swing.JButton();
 
-        setPreferredSize(new java.awt.Dimension(600, 400));
+//         setPreferredSize(new java.awt.Dimension(600, 400));
 
-        lblTituloVenta.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        lblTituloVenta.setText("Venta");
+//         lblTituloVenta.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+//         lblTituloVenta.setText("Venta");
 
-        lblTotal.setText("Total");
+//         lblTotal.setText("Total");
 
-        lblFecha.setText("Fecha");
+//         lblFecha.setText("Fecha");
 
-        cmbCliente.setModel(new DefaultComboBoxModel<>(new ValoresCombo[0]));
+//         cmbCliente.setModel(new DefaultComboBoxModel<>(new ValoresCombo[0]));
 
-        lblCliente.setText("Cliente");
+//         lblCliente.setText("Cliente");
 
-        btnGuardar.setText("Guardar");
+//         btnGuardar.setText("Guardar");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap(197, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
-                                                .createSequentialGroup()
-                                                .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(lblTotal)
-                                                        .addComponent(lblFecha)
-                                                        .addComponent(lblCliente))
-                                                .addGap(18, 18, 18)
-                                                .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING,
-                                                                false)
-                                                        .addComponent(cmbCliente, 0,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(txtTotal)
-                                                        .addComponent(lblTituloVenta)
-                                                        .addComponent(dateChooser, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                164, Short.MAX_VALUE))
-                                                .addGap(184, 184, 184))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
-                                                layout.createSequentialGroup()
-                                                        .addComponent(btnGuardar)
-                                                        .addGap(254, 254, 254)))));
-        layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(54, 54, 54)
-                                .addComponent(lblTituloVenta)
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblTotal)
-                                        .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(38, 38, 38)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(dateChooser, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblFecha))
-                                .addGap(33, 33, 33)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(cmbCliente, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblCliente))
-                                .addGap(58, 58, 58)
-                                .addComponent(btnGuardar)
-                                .addContainerGap(62, Short.MAX_VALUE)));
-    }// </editor-fold>//GEN-END:initComponents
+//         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+//         this.setLayout(layout);
+//         layout.setHorizontalGroup(
+//                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                         .addGroup(layout.createSequentialGroup()
+//                                 .addContainerGap(197, Short.MAX_VALUE)
+//                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
+//                                                 .createSequentialGroup()
+//                                                 .addGroup(layout
+//                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                                                         .addComponent(lblTotal)
+//                                                         .addComponent(lblFecha)
+//                                                         .addComponent(lblCliente))
+//                                                 .addGap(18, 18, 18)
+//                                                 .addGroup(layout
+//                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING,
+//                                                                 false)
+//                                                         .addComponent(cmbCliente, 0,
+//                                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//                                                         .addComponent(txtTotal)
+//                                                         .addComponent(lblTituloVenta)
+//                                                         .addComponent(dateChooser, javax.swing.GroupLayout.DEFAULT_SIZE,
+//                                                                 164, Short.MAX_VALUE))
+//                                                 .addGap(184, 184, 184))
+//                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+//                                                 layout.createSequentialGroup()
+//                                                         .addComponent(btnGuardar)
+//                                                         .addGap(254, 254, 254)))));
+//         layout.setVerticalGroup(
+//                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                         .addGroup(layout.createSequentialGroup()
+//                                 .addGap(54, 54, 54)
+//                                 .addComponent(lblTituloVenta)
+//                                 .addGap(18, 18, 18)
+//                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+//                                         .addComponent(lblTotal)
+//                                         .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE,
+//                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
+//                                                 javax.swing.GroupLayout.PREFERRED_SIZE))
+//                                 .addGap(38, 38, 38)
+//                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                                         .addComponent(dateChooser, javax.swing.GroupLayout.PREFERRED_SIZE,
+//                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
+//                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
+//                                         .addComponent(lblFecha))
+//                                 .addGap(33, 33, 33)
+//                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+//                                         .addComponent(cmbCliente, javax.swing.GroupLayout.PREFERRED_SIZE,
+//                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
+//                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
+//                                         .addComponent(lblCliente))
+//                                 .addGap(58, 58, 58)
+//                                 .addComponent(btnGuardar)
+//                                 .addContainerGap(62, Short.MAX_VALUE)));
+//     }// </editor-fold>//GEN-END:initComponents
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                JFrame frame = new JFrame("Venta");
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setSize(600, 400);
+//     public static void main(String[] args) {
+//         SwingUtilities.invokeLater(new Runnable() {
+//             @Override
+//             public void run() {
+//                 JFrame frame = new JFrame("Venta");
+//                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//                 frame.setSize(600, 400);
 
-                VentaGUI ventaPanel = new VentaGUI();
-                frame.add(ventaPanel);
+//                 VentaGUI ventaPanel = new VentaGUI();
+//                 frame.add(ventaPanel);
 
-                frame.setVisible(true);
-            }
-        });
-    }
+//                 frame.setVisible(true);
+//             }
+//         });
+//     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnGuardar;
-    private javax.swing.JComboBox<ValoresCombo> cmbCliente;
-    private com.toedter.calendar.JDateChooser dateChooser;
-    private javax.swing.JLabel lblCliente;
-    private javax.swing.JLabel lblFecha;
-    private javax.swing.JLabel lblTituloVenta;
-    private javax.swing.JLabel lblTotal;
-    private javax.swing.JTextField txtTotal;
-    // End of variables declaration//GEN-END:variables
-}
+//     // Variables declaration - do not modify//GEN-BEGIN:variables
+//     private javax.swing.JButton btnGuardar;
+//     private javax.swing.JComboBox<ValoresCombo> cmbCliente;
+//     private com.toedter.calendar.JDateChooser dateChooser;
+//     private javax.swing.JLabel lblCliente;
+//     private javax.swing.JLabel lblFecha;
+//     private javax.swing.JLabel lblTituloVenta;
+//     private javax.swing.JLabel lblTotal;
+//     private javax.swing.JTextField txtTotal;
+//     // End of variables declaration//GEN-END:variables
+// }
