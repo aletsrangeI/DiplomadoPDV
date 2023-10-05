@@ -34,8 +34,9 @@ public class Venta_DetalleDB {
     public boolean create(Detalle_Venta detalle_venta) {
         MysqlHandler mysqlHandler = MysqlHandler.getInstance();
         mysqlHandler.openConnection();
-        String query = "INSERT INTO detalle_venta (ID_Producto, Cantidad, Subtotal) VALUES ('"
-                + "', " + detalle_venta.getID_Producto() + ", " + detalle_venta.getCantidad() + ", '"
+        String query = "INSERT INTO detalle_venta (ID_Venta, ID_Producto, Cantidad, Subtotal) VALUES ('"
+                + detalle_venta.getID_Venta() + "', '"
+                + detalle_venta.getID_Producto() + "', '" + detalle_venta.getCantidad() + "', '"
                 + detalle_venta.getSubtotal() + "')";
         boolean success = mysqlHandler.insertData(query);
         mysqlHandler.closeConnection();
